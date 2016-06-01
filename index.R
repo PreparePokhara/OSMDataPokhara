@@ -50,4 +50,4 @@ write_user_csv <- function(username){
   write.csv(userDataFrame, file= sprintf("data/csv/%s.csv",username) )
 }
 
-lapply(c("Nirab Pudasaini", "Ro Sun", "gaurab basnet", "Manoj Thapa"), write_user_csv)
+lapply(c("Nirab Pudasaini", "Ro Sun", "gaurab basnet", "Manoj Thapa","Mrnprabhat", "JasnaBudhathoki", "Parassrest", "Bishal9841"), write_user_csv)
