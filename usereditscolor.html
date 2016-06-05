@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Edits by Different Users</title>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <script>
+      var outerWidth = 720;
+      var outerHeight = 820;
+      var xColumn = "lon";
+      var yColumn = "lat";
+      var colorColumn = "uid";
+      var svg = d3.select("body").append("svg")
+        .attr("width", outerWidth)
+        .attr("height", outerHeight);
+      var xScale = d3.scale.linear().range([0, outerWidth]);
+      var yScale = d3.scale.linear().range([outerHeight, 0]);
+      var colorScale = d3.scale.category20();
+      function render(data){
+        xScale.domain(d3.extent(data, function (d){ return d[xColumn]; }));
+        yScale.domain(d3.extent(data, function (d){ return d[yColumn]; }));
+        var circles = svg.selectAll("circle").data(data);
+        circles.enter().append("circle");
+        circles
+          .attr("cx",      function (d){ return       xScale(d[xColumn]);     })
+          .attr("cy",      function (d){ return       yScale(d[yColumn]);     })
+          .attr("r",1)
+          .attr("fill",    function (d){ return   colorScale(d[colorColumn]); });
+        circles.exit().remove();
+      }
+      function type(d){
+        d.lat = +d.lat;
+        d.lon  = +d.lon;
+        return d;
+      }
+      d3.csv("pokhara.osm.csv", type, render);
+    </script>
+  </body>
+</html>

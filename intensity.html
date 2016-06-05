@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>OSM Pokhara Mapping Intensity</title>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+      <style>
+      body {
+        background: black;
+      }
+      circle {
+        fill: rgba(255, 50, 50, 0.2);
+      }
+    </style>
+  </head>
+  <body >
+    <script>
+      var outerWidth  = 720;
+      var outerHeight = 820;
+      var margin = { left: -50, top: 0, right: -50, bottom: 0 };
+
+      var xColumn = "lon";
+      var yColumn = "lat";
+
+      var innerWidth  = outerWidth  - margin.left - margin.right;
+      var innerHeight = outerHeight - margin.top  - margin.bottom;
+
+      var svg = d3.select("body").append("svg")        
+        .attr("width", outerWidth)
+        .attr("height", outerHeight);
+
+      var g = svg.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+      var xScale = d3.scale.linear().range([0, outerWidth]);
+      var yScale = d3.scale.linear().range([outerHeight, 0]);
+      
+      function render(data){
+        xScale.domain(d3.extent(data, function (d){ return d[xColumn]; }));
+        yScale.domain(d3.extent(data, function (d){ return d[yColumn]; }));
+        var circles = g.selectAll("circle").data(data);
+        circles.enter().append("circle");
+        circles
+          .attr("cx",      function (d){ return       xScale(d[xColumn]);     })
+          .attr("cy",      function (d){ return       yScale(d[yColumn]);     })
+          .attr("r",1)          
+        circles.exit().remove();
+      }
+      function type(d){
+        d.lat = +d.lat;
+        d.lon  = +d.lon;
+        return d;
+      }
+      d3.csv("pokhara.osm.csv", type, render);
+    </script>
+  </body>
+</html>

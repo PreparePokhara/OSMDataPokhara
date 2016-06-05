@@ -1,3 +1,5 @@
+require(OSMTimeLapseR)
+
 #' Create a data.table with columns as specified, given osm file.
 #' 
 #' OSM file can be a .csv file, a .osm file or a .pbf file.
@@ -38,16 +40,18 @@ setwd("~/Programming/Projects/R/OSMPokharaStats/")
 
 download.file(url = "https://s3.amazonaws.com/metro-extracts.mapzen.com/pokhara_nepal.osm.pbf", destfile = "pokhara.osm.pbf")
 pokhara <- read_OSM("pokhara.osm.pbf")
+pokhara$Date <- as.Date(pokhara$timestamp);
+write.csv(subset(pokhara, select=c("lat", "lon","Date","uid")),"pokhara.osm.csv")
 
-pokhara_user_summary <- as.data.frame(table(pokhara$user))
-pokhara_highway_summary <- as.data.frame(table(pokhara$highway))
-pokhara_building_summary <- as.data.frame(table(pokhara$building))
-pokhara_amenity_summary <- as.data.frame(table(pokhara$amenity))
-pokhara_version_summary <- as.data.frame(table(pokhara$version))
+write_column_summary <- function(columnname){
+  summaryDataFrame <- as.data.frame(table(subset(pokhara, select=c(columnname))))
+  write.csv(summaryDataFrame, file = sprintf("data/csv/%sSummary.csv",columnname) )
+}
 
 write_user_csv <- function(username){
   userDataFrame <- pokhara[pokhara$user == username]
-  write.csv(userDataFrame, file= sprintf("data/csv/%s.csv",username) )
+  write.csv(userDataFrame, file= sprintf("data/csv/%s.csv",username))
 }
 
 lapply(c("Nirab Pudasaini", "Ro Sun", "gaurab basnet", "Manoj Thapa","Mrnprabhat", "JasnaBudhathoki", "Parassrest", "Bishal9841"), write_user_csv)
+lapply(c("user","highway","building","amenity","version"), write_column_summary)
