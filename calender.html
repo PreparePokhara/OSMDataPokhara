@@ -123,17 +123,17 @@ svg.selectAll(".month")
     .attr("id", function(d,i){ return month[i] })
     .attr("d", monthPath);
 
-d3.csv("pokhara.osm.csv", function(error, csv) {
+d3.csv("data/csv/timestampSummary.csv", function(error, csv) {
   if (error) throw error;
   console.log(csv[0]);
 
   var data = d3.nest()
-    .key(function(d) {return d.Date; })
-    .rollup(function(d) { return d.length; })
+    .key(function(d) {return d.Var1; })
+    .rollup(function(d) { return d[0].Freq; })
     .map(csv);
 
   rect.filter(function(d) { return d in data; })
-      .attr("class", function(d) { return "day " + color(data[d]/csv.length); })
+      .attr("class", function(d) { return "day " + color(data[d]/50000); })
     .select("title")
       .text(function(d) { console.log(data); return  data[d] + " object have timestamp of " + d; });
 });
