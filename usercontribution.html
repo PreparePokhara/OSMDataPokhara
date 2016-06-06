@@ -54,7 +54,7 @@ d3.csv("data/csv/userSummary.csv", function(error, data) {
         .attr("cy", function(d){ return d.y; })
         .style("fill", function(d) { return color(d.value); })
         .append("svg:title")
-        .text(function(d) { return d["Var1"]; });;
+        .text(function(d) { return (d["Var1"] + " with " + d.value + " objects"); });;
 
 })
 
