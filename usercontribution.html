@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+h1{
+  margin-left: 75px;
+}
+
+h2{
+  margin-left: 75px;
+  font-style: italic;
+}
+
+</style>
+<body>
+<h1> User Contributions and Size of Contribution </h1>
+<h2> hover over the circle to find the username, can you find yours? </h2>
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script>
+
+var diameter = 1100,
+    format = d3.format(",d"),
+    color = d3.scale.category20c();
+
+var bubble = d3.layout.pack()
+    .sort(null)
+    .size([diameter, diameter])
+    .padding(2.5);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", diameter)
+    .attr("height", diameter)
+    .attr("class", "bubble");
+
+d3.csv("data/csv/userSummary.csv", function(error, data) {
+  if (error) throw error;
+    //convert numerical values from strings to numbers
+    data = data.map(function(d){ d.value = +d["Freq"]; console.log(d);return d; });
+
+    //bubbles needs very specific format, convert data to this.
+    var nodes = bubble.nodes({children:data}).filter(function(d) { return !d.children; });
+
+    //setup the chart
+    var bubbles = svg.append("g")
+        .attr("transform", "translate(0,0)")
+        .selectAll(".bubble")
+        .data(nodes)
+        .enter();
+
+    //create the bubbles
+    bubbles.append("circle")
+        .attr("r", function(d){ return d.r; })
+        .attr("cx", function(d){ return d.x; })
+        .attr("cy", function(d){ return d.y; })
+        .style("fill", function(d) { return color(d.value); })
+        .append("svg:title")
+        .text(function(d) { return d["Var1"]; });;
+
+})
+
+
+</script>
+</body>
