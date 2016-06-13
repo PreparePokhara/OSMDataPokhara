@@ -40,8 +40,8 @@ setwd("~/Programming/Projects/R/PokharaOSMStats/")
 
 download.file(url = "https://s3.amazonaws.com/metro-extracts.mapzen.com/pokhara_nepal.osm.pbf", destfile = "pokhara.osm.pbf")
 pokhara <- read_OSM("pokhara.osm.pbf")
-pokhara$Date <- as.Date(pokhara$timestamp);
-write.csv(subset(pokhara, select=c("lat", "lon","Date","uid")),"pokhara.osm.csv")
+pokhara$timestamp <- as.Date(pokhara$timestamp);
+write.csv(subset(pokhara, select=c("lat", "lon","timestamp","uid")),"pokhara.osm.csv")
 
 write_column_summary <- function(columnname){
   summaryDataFrame <- as.data.frame(table(subset(pokhara, select=c(columnname))))
