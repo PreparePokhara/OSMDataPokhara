@@ -7,7 +7,7 @@ require(OSMTimeLapseR)
 #' the osmconvert command. A .csv file with an identical basename will be created.
 #' @param osm_file The osm_file to process. Can be a .csv, .osm, or .pbf file.
 #' @param osmconvert Path to the osmconvert command-line utility. See
-#'          http://wiki.openstreetmap.org/wiki/Osmconvert for installation.
+#'          http://wiki.openstreetmap.org/wiki/osmconvert for installation.
 #' @param columns Columns that osmconvert should output. Syntax from osmconvert.
 #' @export
 #' @return A data.table, with lat, lon, and timestamp columns.
@@ -36,7 +36,7 @@ read_OSM <- function(osm_file, osmconvert = 'osmconvert', columns = '@id @lon @l
   dt$timestamp = ymd_hms(dt$timestamp) #dt[, timestamp := ymd_hms(timestamp)]
   dt
 }
-setwd("~/Programming/Projects/R/OSMPokharaStats/")
+setwd("~/Programming/Projects/R/PokharaOSMStats/")
 
 download.file(url = "https://s3.amazonaws.com/metro-extracts.mapzen.com/pokhara_nepal.osm.pbf", destfile = "pokhara.osm.pbf")
 pokhara <- read_OSM("pokhara.osm.pbf")
