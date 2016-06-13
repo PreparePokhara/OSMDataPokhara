@@ -54,4 +54,4 @@ write_user_csv <- function(username){
 }
 
 lapply(c("Nirab Pudasaini", "Ro Sun", "gaurab basnet", "Manoj Thapa","Mrnprabhat", "JasnaBudhathoki", "Parassrest", "Bishal9841"), write_user_csv)
-lapply(c("user","highway","building","amenity","version"), write_column_summary)
+lapply(c("user","highway","building","amenity","version","timestamp"), write_column_summary)
