@@ -42,16 +42,38 @@ download.file(url = "https://s3.amazonaws.com/metro-extracts.mapzen.com/pokhara_
 pokhara <- read_OSM("pokhara.osm.pbf")
 pokhara$timestamp <- as.Date(pokhara$timestamp);
 write.csv(subset(pokhara, select=c("lat", "lon","timestamp","uid")),"pokhara.osm.csv")
+data_date <- as.Date("2016-05-25")
 
 write_column_summary <- function(columnname){
   summaryDataFrame <- as.data.frame(table(subset(pokhara, select=c(columnname))))
-  write.csv(summaryDataFrame, file = sprintf("data/csv/%sSummary.csv",columnname) )
+  write.csv(summaryDataFrame, file = sprintf("data/csv/overall/%sSummary.csv",columnname) )
 }
 
-write_user_csv <- function(username){
-  userDataFrame <- pokhara[pokhara$user == username]
-  write.csv(userDataFrame, file= sprintf("data/csv/%s.csv",username))
+write_column_summary_month <- function(columnname){
+  lastMonthData <- pokhara[pokhara$timestamp >= data_date - 30 & pokhara$timestamp <= data_date]
+  summaryDataFrame <- as.data.frame(table(subset(lastMonthData, select=c(columnname))))
+  summaryDataFrame <- summaryDataFrame [summaryDataFrame$Freq > 0,]
+  write.csv(summaryDataFrame, file = sprintf("data/csv/last_month/%sSummary.csv",columnname) )
 }
 
-lapply(c("Nirab Pudasaini", "Ro Sun", "gaurab basnet", "Manoj Thapa","Mrnprabhat", "JasnaBudhathoki", "Parassrest", "Bishal9841"), write_user_csv)
+
+write_column_summary_week <- function(columnname){
+  lastWeekData <- pokhara[pokhara$timestamp >= data_date - 7 & pokhara$timestamp <= data_date]
+  summaryDataFrame <- as.data.frame(table(subset(lastWeekData, select=c(columnname))))
+  summaryDataFrame <- summaryDataFrame [summaryDataFrame$Freq > 0,]
+  write.csv(summaryDataFrame, file = sprintf("data/csv/last_week/%sSummary.csv",columnname) )
+}
+
+
 lapply(c("user","highway","building","amenity","version","timestamp"), write_column_summary)
+lapply(c("user","highway","building","amenity","version","timestamp"), write_column_summary_month)
+lapply(c("user","highway","building","amenity","version","timestamp"), write_column_summary_week)
+
+
+
+# write_user_csv <- function(username){
+#   userDataFrame <- pokhara[pokhara$user == username]
+#   write.csv(userDataFrame, file= sprintf("data/csv/%s.csv",username))
+# }
+# 
+# lapply(c("Nirab Pudasaini", "Ro Sun", "gaurab basnet", "Manoj Thapa","Mrnprabhat", "JasnaBudhathoki", "Parassrest", "Bishal9841"), write_user_csv)
