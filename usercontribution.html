@@ -37,7 +37,7 @@ var svg = d3.select("body").append("svg")
     .attr("height", diameter)
     .attr("class", "bubble");
 
-d3.csv("data/csv/userSummary.csv", function(error, data) {
+d3.csv("data/csv/overall/userSummary.csv", function(error, data) {
   if (error) throw error;
     //convert numerical values from strings to numbers
     data = data.map(function(d){ d.value = +d["Freq"]; console.log(d);return d; });
